@@ -1,9 +1,30 @@
 #!/bin/bash
 clear
 if [ “$(uname)”  == “Linux” ]; then 
-	echo OS = Linux
+	echo OS: Linux
 	
+	temp="$(egrep -h ^DISTRIB_ID= /etc/*-release | awk '{ print substr($0,12)}')"
+	if [[ "$temp" = "Ubuntu" ]]; then
+		echo Distro: Ubuntu
+		echo Version: "$(egrep -h ^VERSION= /etc/*-release | awk '{print substr($0,9)}')" 
+		echo Codename: "$(egrep -h ^DISTRIB_CODENAME= /etc/*-release | awk '{print substr($0, 18)}')"
+
+		echo
+
+		echo CPU: "$(egrep -h ^model\ name /proc/cpuinfo | awk '{print substr($0, 14)}')"
+		echo Architecture: $(uname -m)
+		echo Number of CPU cores:  "$(egrep -h ^cpu\ cores /proc/cpuinfo | awk '{print $4 }')"
+
+		echo 
 	
+		echo RAM Size: "$(egrep -h ^MemTotal: /proc/meminfo | awk '{ size = $2 / 1024 ; print size  "MB" }')"
+	
+		echo 
+
+		echo Storage Devices:
+		df
+       fi
+
 	
 elif [ “$(uname)” == “Darwin” ]; then
 	echo OS: Mac OS X
