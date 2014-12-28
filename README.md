@@ -11,15 +11,15 @@
 
   ```
   wget https://codeload.github.com/ThatFurryOne/System-Information-Script/zip/master
-  unzip OS-Detection-Script-master.zip
-  cd OS-Detection-Script-master/
+  unzip System-Information-Script.zip
+  cd System-Information-Script/
   ```
   
   Or use git clone:
   
   ``` 
   git clone https://github.com/ThatFurryOne/System-Information-Script.git
-  cd OS-Detection-Script-master/
+  cd System-Information-Script/
   ```
 
 ##Running the script?
