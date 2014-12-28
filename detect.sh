@@ -8,9 +8,8 @@ if [ “$(uname)”  == “Linux” ]; then
 	#OS is Linux based:
 	echo OS: Linux
 	
-	#Checks for the distro type:
-	temp="$(egrep -h ^DISTRIB_ID= /etc/*-release | awk '{ print substr($0,12)}')"
-	if [[ "$temp" = "Ubuntu" ]]; then
+	#Checks for the distro type - Distrib_ID or Name in the /etc/*-release info
+	if [[ "$(egrep -h ^DISTRIB_ID= /etc/*-release | awk '{ print substr($0,12)}')" = "Ubuntu" ]]; then
 		#Ubuntu distro information
 		echo Distro: Ubuntu
 		echo Version: "$(egrep -h ^VERSION= /etc/*-release | awk '{print substr($0,9)}')" 
@@ -63,7 +62,63 @@ if [ “$(uname)”  == “Linux” ]; then
 				echo Appears to have internet connectivity.
 			else
 				echo -e '\t' Appears that there is no internet connection.
+		fi
+	elif [ "$(egrep -h ^NAME= /etc/*-release | awk '{ print substr($0,6)}')" = "openSUSE" ]; then
+		#openSUSE
+		echo Distro: OpenSUSE
+		echo Version: "$(egrep -h ^VERSION= /etc/*-release | awk '{print substr($0,9)}')"
+		echo Fullname: "$(egrep -h ^PRETTY_NAME= /etc/*-release | awk '{print substr($0, 13)}')"
+		
+		echo
+		
+		#CPU information - uname -m may not always work?
+		echo CPU: "$(egrep -h ^model\ name /proc/cpuinfo | awk '{print substr($0, 14)}')"
+		echo Architecture: $(uname -m)
+		echo Number of CPU cores: $(nproc) #due to cpuinfo layout nproc is used - number of proccesing cores
+ 
+		echo 
+		
+		#RAM information - Needs more work
+		echo RAM Size: "$(egrep -h ^MemTotal: /proc/meminfo | awk '{ size = $2 / 1024 ; print size  "MB" }')"
+	
+		echo 
+		
+		#Uses the df command currently without any specific formatting
+		echo Storage Devices:
+		df 
+
+		echo 
+		
+		#Networking - "echo -e '\t'" is the tab for formatting.
+		#Does use awk/grep a lot - may be better ways of doing this. 
+		#ifconfig doesn't have a direct path in OpenSUSE.
+		echo Networking Status:
+		temp=($(/sbin/ifconfig | grep "^[^ ]" | awk '{print $1}'))
+
+		for i in "${temp[@]}"
+		do :
+			echo -e '\t' Interface: $i:
+			if [ "$(/sbin/ifconfig | grep -A 7 $i | grep 'inet addr:' | awk '{print $2}' | awk -F":" '{print $2}')" != "" ]; then
+				echo -e '\t\t' IPV4 Address: "$(/sbin/ifconfig | grep -A 7 $i | grep 'inet addr:' | awk '{print $2}' | awk -F":" '{print $2}')"
+			else 
+				echo -e '\t\t' IPV4 Address: None.
 			fi
+			if [ "$(/sbin/ifconfig | grep -A 7 $i | grep 'inet6 addr:' | awk '{print $3}')" != "" ]; then
+				echo -e '\t\t' IPV6 Address: "$(/sbin/ifconfig | grep -A 7 $i | grep 'inet6 addr:' | awk '{print $3 }')"
+			else 
+				echo -e '\t\t' IPV6 Address: None.
+			fi
+
+		done
+
+		echo
+		
+		#Test for internet connectivity via wget and google.com - again more than one way of doing this.
+		if [ "$(wget --spider -S www.google.com 2>&1 | grep '200 OK')" != "" ]; then
+				echo Appears to have internet connectivity.
+			else
+				echo -e '\t' Appears that there is no internet connection.
+		fi
 	fi
 
 	
