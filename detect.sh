@@ -14,7 +14,7 @@ if [ “$(uname)”  == “Linux” ]; then
 		echo CPU: "$(egrep -h ^model\ name /proc/cpuinfo | awk '{print substr($0, 14)}')"
 		echo Architecture: $(uname -m)
 		echo Number of CPU cores:  "$(egrep -h ^cpu\ cores /proc/cpuinfo | awk '{print $4 }')"
-
+ 
 		echo 
 	
 		echo RAM Size: "$(egrep -h ^MemTotal: /proc/meminfo | awk '{ size = $2 / 1024 ; print size  "MB" }')"
@@ -22,8 +22,34 @@ if [ “$(uname)”  == “Linux” ]; then
 		echo 
 
 		echo Storage Devices:
-		df
-       fi
+		df 
+
+		echo 
+		echo Networking Status:
+		temp=($(ifconfig | grep "^[^ ]" | awk '{print $1}'))
+
+		for i in "${temp[@]}"
+		do :
+			echo -e '\t' Interface: $i:
+			if [ "$(ifconfig | grep -A 7 $i | grep 'inet addr:' | awk '{print $2}' | awk -F":" '{print $2}')" != "" ]; then
+				echo -e '\t\t' IPV4 Address: "$(ifconfig | grep -A 7 $i | grep 'inet addr:' | awk '{print $2}' | awk -F":" '{print $2}')"
+			else 
+				echo -e '\t\t' IPV4 Address: None.
+			fi
+			if [ "$(ifconfig | grep -A 7 $i | grep 'inet6 addr:' | awk '{print $3}')" != "" ]; then
+				echo -e '\t\t' IPV6 Address: "$(ifconfig | grep -A 7 $i | grep 'inet6 addr:' | awk '{print $3 }')"
+			else 
+				echo -e '\t\t' IPV6 Address: None.
+			fi
+
+		done
+		echo 
+		if [ "$(wget --spider -S www.google.com 2>&1 | grep '200 OK')" != "" ]; then
+				echo Appears to have internet connectivity.
+			else
+				echo -e '\t' Appears that there is no internet connection.
+			fi
+	fi
 
 	
 elif [ “$(uname)” == “Darwin” ]; then
