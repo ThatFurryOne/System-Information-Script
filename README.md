@@ -32,7 +32,8 @@
   ```
   sudo ./detect.sh
   ```
-  
+##License:
+This is released under the MIT License, please see License for more information.
 ##Reporting bugs:
   Please use the issues reporter on the right.
   
