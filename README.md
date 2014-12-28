@@ -1,4 +1,4 @@
-#OS-Detection-Script
+#System-Information-Script
 
 ##What does it do?
   It finds the data about the computer and displays it. The data is information on the operating system and the hardware.
@@ -10,7 +10,7 @@
   Download the zip file from https://codeload.github.com/ThatFurryOne/OS-Detection-Script/zip/master via a browser or wget:
 
   ```
-  wget https://codeload.github.com/ThatFurryOne/OS-Detection-Script/zip/master
+  wget https://codeload.github.com/ThatFurryOne/System-Information-Script/zip/master
   unzip OS-Detection-Script-master.zip
   cd OS-Detection-Script-master/
   ```
@@ -18,7 +18,7 @@
   Or use git clone:
   
   ``` 
-  git clone https://github.com/ThatFurryOne/OS-Detection-Script.git
+  git clone https://github.com/ThatFurryOne/System-Information-Script.git
   cd OS-Detection-Script-master/
   ```
 
