@@ -3,31 +3,41 @@
 
 #!/bin/bash
 clear
+#uname is the OS type variable.
 if [ “$(uname)”  == “Linux” ]; then 
+	#OS is Linux based:
 	echo OS: Linux
 	
+	#Checks for the distro type:
 	temp="$(egrep -h ^DISTRIB_ID= /etc/*-release | awk '{ print substr($0,12)}')"
 	if [[ "$temp" = "Ubuntu" ]]; then
+		#Ubuntu distro information
 		echo Distro: Ubuntu
 		echo Version: "$(egrep -h ^VERSION= /etc/*-release | awk '{print substr($0,9)}')" 
 		echo Codename: "$(egrep -h ^DISTRIB_CODENAME= /etc/*-release | awk '{print substr($0, 18)}')"
-
+		
 		echo
-
+		
+		#CPU information - uname -m may not always work?
 		echo CPU: "$(egrep -h ^model\ name /proc/cpuinfo | awk '{print substr($0, 14)}')"
 		echo Architecture: $(uname -m)
 		echo Number of CPU cores:  "$(egrep -h ^cpu\ cores /proc/cpuinfo | awk '{print $4 }')"
  
 		echo 
-	
+		
+		#RAM information - Needs more work
 		echo RAM Size: "$(egrep -h ^MemTotal: /proc/meminfo | awk '{ size = $2 / 1024 ; print size  "MB" }')"
 	
 		echo 
-
+		
+		#Uses the df command currently without any specific formatting
 		echo Storage Devices:
 		df 
 
 		echo 
+		
+		#Networking - "echo -e '\t'" is the tab for formatting.
+		#Does use awk/grep a lot - may be better ways of doing this. 
 		echo Networking Status:
 		temp=($(ifconfig | grep "^[^ ]" | awk '{print $1}'))
 
@@ -47,6 +57,8 @@ if [ “$(uname)”  == “Linux” ]; then
 
 		done
 		echo 
+		
+		#Test for internet connectivity via wget and google.com - again more than one way of doing this.
 		if [ "$(wget --spider -S www.google.com 2>&1 | grep '200 OK')" != "" ]; then
 				echo Appears to have internet connectivity.
 			else
@@ -56,13 +68,14 @@ if [ “$(uname)”  == “Linux” ]; then
 
 	
 elif [ “$(uname)” == “Darwin” ]; then
+	#Apple/OS X
 	echo OS: Mac OS X
 	echo Version: "$(sw_vers -productVersion)"
 	version="$(sw_vers -productVersion)"
-	
+	#Gets the codename - Unknown if this works for all of them.
 	if [[ "$version" = "10.0"* ]] ; then
 		echo CodeName: Cheetah
-	elif [[ $version = "10.10"* ]]; then
+	elif [[ $version = "10.10"* ]]; then #Verified
 		echo CodeName: Yosemite
 	elif [[ $version == "10.1"* ]]; then
 		echo CodeName: Puma
@@ -86,6 +99,7 @@ elif [ “$(uname)” == “Darwin” ]; then
 	
 	echo 
 	
+	#CPU information
 	echo CPU: $(sysctl -n machdep.cpu.brand_string)
 	echo Architecture: $(uname -pm)
 	echo Number of CPU cores: $(sysctl -n hw.ncpu) 
@@ -93,19 +107,25 @@ elif [ “$(uname)” == “Darwin” ]; then
 	
 	echo 
 	
+	#Ram Size
 	echo RAM Size: $(sysctl -n hw.memsize | awk '{ size = $1 / 1024 / 1024 ; print size  "MB" }')
 	
 	echo 
 	
+	#Storage
 	echo Storage Devices: 
 	diskutil list
 elif [[ “$(uname)”  == "CYGWIN"* ]]; then
+	#Windows
 	echo OS: Windows with a CYGWIN shell.
 elif [ “$(uname)” == “FreeBSD” ]; then 
+	#FreedBSD
 	echo OS: FreeBSD
 elif [ “$(uname)” == “NetBSD” ]; then 	
+	#netBSD
 	echo OS: NetBSD
 elif [ “$(uname)” == “GNU” ]; then
+	#GNU - This can also mean Linux or a variant operating system.
 	echo OS: GNU
 fi
 
