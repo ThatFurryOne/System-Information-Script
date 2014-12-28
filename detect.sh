@@ -1,3 +1,6 @@
+#This is released under the MIT License
+#See the LICENSE.md file for more information.
+
 #!/bin/bash
 clear
 if [ “$(uname)”  == “Linux” ]; then 
