@@ -14,7 +14,7 @@ By adding in code that can help with the aim of the project or by filling in gap
 The output styling needs to be ordered and remove remove unnescary information, this may require awk/grep knowledge.
 
 ###Example output
-This is of Ubuntu in a Virtual Machine:
+This is Ubuntu in a Virtual Machine:
 
 ```
 OS: Linux
