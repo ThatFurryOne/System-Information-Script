@@ -31,7 +31,7 @@ if [ “$(uname)”  == “Linux” ]; then
 		
 		#Uses the df command currently without any specific formatting
 		echo Storage Devices:
-		df 
+		df -h
 
 		echo 
 		
@@ -85,7 +85,7 @@ if [ “$(uname)”  == “Linux” ]; then
 		
 		#Uses the df command currently without any specific formatting
 		echo Storage Devices:
-		df 
+		df -h
 
 		echo 
 		
